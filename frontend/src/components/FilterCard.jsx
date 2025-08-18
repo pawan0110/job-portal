@@ -1,32 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Label } from "@radix-ui/react-label";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 
-const filterData = [
-  {
-    filterType: "Location",
-    array: ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Pune"],
-  },
-  {
-    filterType: "Industry",
-    array: ["Google", "Microsoft", "Amazon", "Flipkart", "Paytm", "Zoho"],
-  },
-  {
-    filterType: "Salary",
-    array: ["0-10LPA", "10-20LPA", "30-40LPA", "40LPA+"],
-  },
-];
+const FilterCard = ({ jobs, onFilterChange }) => {
+  const [filters, setFilters] = useState({ Location: "", Industry: "", Salary: "" });
 
-const FilterCard = () => {
+  useEffect(() => {
+    onFilterChange(filters);
+  }, [filters]);
+
+  const filterData = [
+    {
+      filterType: "Location",
+      array: [...new Set(jobs.map((j) => j.location))],
+    },
+    {
+      filterType: "Industry",
+      array: [...new Set(jobs.map((j) => j.company.name))],
+    },
+    {
+      filterType: "Salary",
+      array: [...new Set(jobs.map((j) => j.salary))],
+    },
+  ];
+
+  const clearFilters = () => {
+    setFilters({ Location: "", Industry: "", Salary: "" });
+  };
+
   return (
-    <div className="relative w-full flex justify-end mb-4">
+    <div className="relative w-full flex justify-end mb-6">
       <Popover.Root>
         <Popover.Trigger asChild>
-          <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-lg hover:from-teal-600 hover:to-cyan-700 transition font-medium shadow-md">
-            <SlidersHorizontal className="w-4 h-4" />
-            Filter
+          <button className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:from-teal-600 hover:to-cyan-700 shadow-md font-semibold transition">
+            <SlidersHorizontal className="w-5 h-5" />
+            Filters
           </button>
         </Popover.Trigger>
 
@@ -34,15 +44,30 @@ const FilterCard = () => {
           <Popover.Content
             side="bottom"
             align="end"
-            className="z-50 w-[300px] sm:w-[350px] bg-white rounded-xl shadow-lg p-5 border border-gray-200"
-            sideOffset={8}
+            sideOffset={10}
+            className="z-50 w-[320px] sm:w-[360px] bg-white rounded-xl shadow-xl p-6 border border-gray-200"
           >
-            <h1 className="text-lg font-semibold text-gray-800 mb-4">Filter Jobs</h1>
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-lg font-bold text-gray-800">Filter Jobs</h1>
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-1 text-sm text-gray-500 hover:text-teal-600 transition font-medium"
+              >
+                <X className="w-4 h-4" />
+                Clear
+              </button>
+            </div>
 
-            {filterData.map((filter, index) => (
-              <div key={index} className="mb-5">
+            {filterData.map((filter) => (
+              <div key={filter.filterType} className="mb-5">
                 <h2 className="text-sm font-semibold text-gray-700 mb-2">{filter.filterType}</h2>
-                <RadioGroup className="flex flex-wrap gap-2">
+                <RadioGroup
+                  value={filters[filter.filterType]}
+                  onValueChange={(val) =>
+                    setFilters((prev) => ({ ...prev, [filter.filterType]: val }))
+                  }
+                  className="flex flex-wrap gap-2"
+                >
                   {filter.array.map((item, idx) => {
                     const id = `${filter.filterType}-${idx}`;
                     return (
@@ -50,7 +75,7 @@ const FilterCard = () => {
                         <RadioGroupItem id={id} value={item} className="sr-only peer" />
                         <Label
                           htmlFor={id}
-                          className="peer-checked:bg-indigo-600 peer-checked:text-white text-sm cursor-pointer px-3 py-1.5 border border-gray-300 rounded-md text-gray-700 hover:bg-teal-100 transition"
+                          className="peer-checked:bg-teal-600 peer-checked:text-white text-sm cursor-pointer px-4 py-1.5 border border-gray-300 rounded-full hover:bg-teal-100 transition"
                         >
                           {item}
                         </Label>
@@ -62,7 +87,7 @@ const FilterCard = () => {
             ))}
 
             <Popover.Close
-              className="mt-3 w-full text-center bg-gray-100 hover:bg-gray-200 py-1.5 text-sm rounded-md text-gray-600"
+              className="mt-3 w-full text-center bg-gray-100 hover:bg-gray-200 py-2 text-sm rounded-lg text-gray-600 transition font-medium"
               aria-label="Close"
             >
               Close
