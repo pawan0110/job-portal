@@ -21,7 +21,7 @@ const JobDescription = () => {
       (application) => application.applicant === user?._id
     ) || false;
 
-  // Apply handler (GET)
+  // Apply handler
   const applyJobHandler = async () => {
     try {
       const res = await axios.get(
@@ -87,7 +87,7 @@ const JobDescription = () => {
         </div>
 
         <Button
-          onClick={isApplied ? null : applyJobHandler}
+          onClick={!isApplied ? applyJobHandler : null}
           disabled={isApplied}
           className={`rounded-lg ${
             isApplied
