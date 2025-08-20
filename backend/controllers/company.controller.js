@@ -84,13 +84,29 @@ export const getCompanyById = async (req, res) => {
 };
 
 // Update Company Info
+// Update Company Info
 export const updateCompany = async (req, res) => {
   try {
     const { name, description, website, location } = req.body;
+
+    // collect update fields
     const updateData = { name, description, website, location };
+
+    // ✅ check if a file was uploaded
+    if (req.file) {
+      console.log("📂 File uploaded:", req.file.originalname);
+
+      // If you want to store buffer directly in MongoDB
+      updateData.logo = req.file.buffer;
+
+      // OR (better) upload to Cloudinary / S3 and store URL instead
+      // const result = await uploadOnCloudinary(req.file.buffer);
+      // updateData.logo = result.secure_url;
+    }
 
     const company = await Company.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
+      runValidators: true,
     });
 
     if (!company) {
@@ -106,7 +122,8 @@ export const updateCompany = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error(error);
+    console.error("❌ updateCompany error:", error.message);
     res.status(500).json({ message: "Server error", success: false });
   }
 };
+
