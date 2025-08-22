@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,9 +12,21 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Edit2, MoreHorizontal } from "lucide-react";
 import { useSelector } from "react-redux";
+import { setSearchCompamyByText } from "@/redux/companySlice";
 
 const CompaniesTable = () => {
-const companies = useSelector((store) => store.company?.companies );
+const companies = useSelector((store) => store.company?.companies ) || [];
+const [filterCompany, setFilterCompany] = useState(companies);
+
+useEffect(()=>{
+  const filterCompany = companies.length >= 0 && companies.filter((company) => {
+     if(!setSearchCompamyByText){
+      return true
+     };
+     return company?.name?.toLowercase().includes(setSearchCompamyByText.toLowercase());
+  });
+  setFilterCompany(filterCompany);
+},[companies,setSearchCompamyByText])
 
 
   return (
@@ -30,7 +42,7 @@ const companies = useSelector((store) => store.company?.companies );
           </TableRow>
         </TableHeader>
         <TableBody>
-          {companies.length <= 0 ? (
+          {companies.length === 0 ? (
             <TableRow>
               <TableCell colSpan={4} className="text-center text-gray-500">
                 Haven&apos;t registered any company yet

@@ -15,15 +15,18 @@ const useGetAllCompany = () => {
         });
 
         if (res.data.success) {
-          dispatch(setCompanies(res.data.company));
+          dispatch(setCompanies(res.data.companies || [])); // ✅ Corrected to `companies`
+        } else {
+          dispatch(setCompanies([])); // Fallback for no data
         }
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        console.error("Error fetching companies:", error);
+        dispatch(setCompanies([])); // Avoid stale data on error
       }
     };
 
     fetchCompanies();
-  }, [dispatch]); // ✅ Added dependency
+  }, [dispatch]);
 };
 
 export default useGetAllCompany;
