@@ -9,6 +9,8 @@ import JobDescription from "./components/JobDescription.jsx";
 import Companies from "./components/admin/companies.jsx"; // ✅ Capitalized
 import CompanyCreate from "./components/admin/CompanyCreate.jsx";
 import CompanySetup from "./components/admin/CompanySetup.jsx";
+import OtherJobs from "./components/admin/OtherJobs.jsx";
+import PostJob from "./components/admin/PostJob.jsx";
 
 const appRouter = createBrowserRouter([
   {
@@ -52,7 +54,12 @@ const appRouter = createBrowserRouter([
     element: <CompanySetup />
   },
   {
-
+    path: "/admin/jobs",
+    element: <OtherJobs />
+  },
+  {
+    path: "/admin/jobs/create",
+    element: <PostJob />
   }
 ]);
 
