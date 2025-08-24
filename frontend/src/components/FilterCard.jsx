@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { Label } from "@radix-ui/react-label";
 import { SlidersHorizontal, X } from "lucide-react";
 
 const FilterCard = ({ jobs, onFilterChange }) => {
   const [filters, setFilters] = useState({ Location: "", Industry: "", Salary: "" });
 
+  // Extract unique values for dropdowns
+  const locations = [...new Set(jobs.map((job) => job.location).filter(Boolean))];
+  const industries = [...new Set(jobs.map((job) => job.company?.name?.trim()).filter(Boolean))];
+  const salaries = [...new Set(jobs.map((job) => job.salary).filter(Boolean))];
+
+  // Apply filters whenever filters state changes
   useEffect(() => {
-    onFilterChange(filters);
-  }, [filters]);
+    const filteredJobs = jobs.filter((job) => {
+      const locationMatch = filters.Location ? job.location === filters.Location : true;
+      const industryMatch = filters.Industry ? job.company?.name?.trim() === filters.Industry : true;
+      const salaryMatch = filters.Salary ? String(job.salary) === String(filters.Salary) : true;
+      return locationMatch && industryMatch && salaryMatch;
+    });
+    onFilterChange(filteredJobs);
+  }, [filters, jobs]);
 
-  const filterData = [
-    {
-      filterType: "Location",
-      array: [...new Set(jobs.map((j) => j.location))],
-    },
-    {
-      filterType: "Industry",
-      array: [...new Set(jobs.map((j) => j.company.name))],
-    },
-    {
-      filterType: "Salary",
-      array: [...new Set(jobs.map((j) => j.salary))],
-    },
-  ];
-
-  const clearFilters = () => {
-    setFilters({ Location: "", Industry: "", Salary: "" });
+  // Handle select change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
+
+  // Reset all filters
+  const clearFilters = () => setFilters({ Location: "", Industry: "", Salary: "" });
 
   return (
     <div className="relative w-full flex justify-end mb-6">
@@ -58,39 +58,60 @@ const FilterCard = ({ jobs, onFilterChange }) => {
               </button>
             </div>
 
-            {filterData.map((filter) => (
-              <div key={filter.filterType} className="mb-5">
-                <h2 className="text-sm font-semibold text-gray-700 mb-2">{filter.filterType}</h2>
-                <RadioGroup
-                  value={filters[filter.filterType]}
-                  onValueChange={(val) =>
-                    setFilters((prev) => ({ ...prev, [filter.filterType]: val }))
-                  }
-                  className="flex flex-wrap gap-2"
-                >
-                  {filter.array.map((item, idx) => {
-                    const id = `${filter.filterType}-${idx}`;
-                    return (
-                      <div key={id}>
-                        <RadioGroupItem id={id} value={item} className="sr-only peer" />
-                        <Label
-                          htmlFor={id}
-                          className="peer-checked:bg-teal-600 peer-checked:text-white text-sm cursor-pointer px-4 py-1.5 border border-gray-300 rounded-full hover:bg-teal-100 transition"
-                        >
-                          {item}
-                        </Label>
-                      </div>
-                    );
-                  })}
-                </RadioGroup>
-              </div>
-            ))}
+            {/* Location Filter */}
+            <div className="mb-4">
+              <label className="block text-gray-600 mb-1">Location</label>
+              <select
+                name="Location"
+                value={filters.Location}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-lg"
+              >
+                <option value="">All Locations</option>
+                {locations.map((loc, idx) => (
+                  <option key={idx} value={loc}>{loc}</option>
+                ))}
+              </select>
+            </div>
 
+            {/* Industry Filter */}
+            <div className="mb-4">
+              <label className="block text-gray-600 mb-1">Industry</label>
+              <select
+                name="Industry"
+                value={filters.Industry}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-lg"
+              >
+                <option value="">All Industries</option>
+                {industries.map((ind, idx) => (
+                  <option key={idx} value={ind}>{ind}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Salary Filter */}
+            <div className="mb-4">
+              <label className="block text-gray-600 mb-1">Salary</label>
+              <select
+                name="Salary"
+                value={filters.Salary}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-lg"
+              >
+                <option value="">All Salaries</option>
+                {salaries.map((sal, idx) => (
+                  <option key={idx} value={sal}>{sal}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Close/Cancel Button */}
             <Popover.Close
               className="mt-3 w-full text-center bg-gray-100 hover:bg-gray-200 py-2 text-sm rounded-lg text-gray-600 transition font-medium"
               aria-label="Close"
             >
-              Close
+              Cancel
             </Popover.Close>
           </Popover.Content>
         </Popover.Portal>
