@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setAllApplicants } from "@/redux/applicationSlice";
 import { APPLICATION_API_END_POINT } from "@/utils/constant";
+import { toast } from "sonner";
 
 const shortListingStatus = ["Accepted", "Rejected"];
 
@@ -22,24 +23,28 @@ const ApplicantsTable = () => {
   const { applicants } = useSelector((store) => store.application);
   const isArray = Array.isArray(applicants);
 
-  // Function to update status
+  axios.defaults.withCredentials = true;
+
+  // Update applicant status
   const handleStatusUpdate = async (applicationId, status) => {
     try {
-      await axios.put(
-        `${APPLICATION_API_END_POINT}/${applicationId}/status`,
-        { status },
-        { withCredentials: true }
+      const res = await axios.post(
+        `${APPLICATION_API_END_POINT}/status/${applicationId}/update`,
+        { status }
       );
 
-      // Update status locally in Redux
-      const updatedApplicants = applicants.map((item) =>
-        item.applicationId === applicationId
-          ? { ...item, status }
-          : item
-      );
-      dispatch(setAllApplicants(updatedApplicants));
+      if (res.data.success) {
+        toast.success(res.data.message);
+
+        // Update Redux store
+        const updatedApplicants = applicants.map((app) =>
+          app.applicationId === applicationId ? { ...app, status } : app
+        );
+        dispatch(setAllApplicants(updatedApplicants));
+      }
     } catch (error) {
       console.error("Failed to update status:", error);
+      toast.error("Failed to update status");
     }
   };
 
@@ -100,15 +105,15 @@ const ApplicantsTable = () => {
                     </PopoverTrigger>
                     <PopoverContent className="w-32">
                       {shortListingStatus.map((statusOption, index) => (
-                        <div
+                        <button
                           key={index}
-                          className="flex items-center p-2 hover:bg-gray-100 cursor-pointer rounded-md"
+                          className="w-full text-left p-2 hover:bg-gray-100 cursor-pointer rounded-md"
                           onClick={() =>
-                            handleStatusUpdate(item.applicationId, statusOption.toLowerCase())
+                            handleStatusUpdate(item.applicationId, statusOption)
                           }
                         >
-                          <span>{statusOption}</span>
-                        </div>
+                          {statusOption}
+                        </button>
                       ))}
                     </PopoverContent>
                   </Popover>
