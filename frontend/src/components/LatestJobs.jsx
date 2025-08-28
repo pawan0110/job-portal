@@ -3,9 +3,10 @@ import LatestJobCards from "./LatestJobCards";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-
 const LatestJobs = () => {
-  const { alljobs } = useSelector(store => store.job);
+  const { alljobs } = useSelector((state) => state.job);
+  console.log(alljobs); // <-- check if this logs 6 or 1
+
   const navigate = useNavigate();
 
   return (
