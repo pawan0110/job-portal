@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const jobSlice = createSlice({
     name: "job",
     initialState: {
-        alljobs: [],
+        allJobs: [],
         AllOtherJobs: [],
         singleJob: null,
         searchJobByText: "",
@@ -12,7 +12,7 @@ const jobSlice = createSlice({
     },
     reducers: {
         setAllJobs: (state, action) => {
-            state.alljobs = action.payload;
+            state.allJobs = action.payload;
         },
         setSingleJob: (state, action) => {
             state.singleJob = action.payload;

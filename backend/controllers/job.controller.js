@@ -59,6 +59,7 @@ export const postJob = async (req, res) => {
 };
 
 // Get all jobs
+// Get all jobs
 export const getAllJobs = async (req, res) => {
   try {
     const keyword = req.query.keyword || "";
@@ -70,22 +71,21 @@ export const getAllJobs = async (req, res) => {
     };
 
     const jobs = await Job.find(query)
-      .populate("company", "name logo") // ✅ populate company name + logo
+      .populate({ path: "company" })
       .sort({ createdAt: -1 });
 
-    if (!jobs || jobs.length === 0) {
-      return res.status(404).json({
-        message: "Jobs not found",
-        success: false,
-      });
-    }
-
-    return res.status(200).json({ jobs, success: true });
+    // ✅ Always return 200, even if no jobs found
+    return res.status(200).json({
+      jobs,
+      success: true,
+      message: jobs.length ? "Jobs fetched successfully" : "No jobs found",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Server error", success: false });
   }
 };
+
 
 // Get job by ID
 export const getJobById = async (req, res) => {

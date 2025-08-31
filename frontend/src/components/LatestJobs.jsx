@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const LatestJobs = () => {
   const { alljobs } = useSelector((state) => state.job);
-  console.log(alljobs); // <-- check if this logs 6 or 1
+// console.log(alljobs); // <-- check if this logs 6 or 1
 
   const navigate = useNavigate();
 
