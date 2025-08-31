@@ -13,7 +13,7 @@ export const register = async (req, res) => {
         message: "Something is missing",
         success: false,
       });
-    };
+    }
     const file = req.file;
     const fileUri = getDatauri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
@@ -34,9 +34,9 @@ export const register = async (req, res) => {
       phoneNumber,
       password: hashedPassword,
       role,
-      profile:{
-        profilePhoto:cloudResponse.secure_url,
-      }
+      profile: {
+        profilePhoto: cloudResponse.secure_url,
+      },
     });
 
     return res.status(201).json({
@@ -141,7 +141,10 @@ export const updateProfile = async (req, res) => {
 
     const file = req.file;
     const fileUri = getDatauri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+      resource_type: "auto",
+       // <-- VERY IMPORTANT
+    });
 
     let user = await User.findById(userId);
     if (!user) {
@@ -162,15 +165,13 @@ export const updateProfile = async (req, res) => {
       if (!user.profile) user.profile = {};
       user.profile.skills = skills.split(",");
     }
-
+   
     // ✅ handle file upload (resume)
-    if(cloudResponse){
-      user.profile.resume = cloudResponse.secure_url
-      user.profile.resumeOriginalName = file.originalname
+    if (cloudResponse) {
+      user.profile.resume = cloudResponse.secure_url;
+      user.profile.resumeOriginalName = file.originalname;
+     // console.log("Uploaded File:", cloudResponse.secure_url);
     }
-
-
-
 
     await user.save();
 
