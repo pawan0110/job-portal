@@ -1,29 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "./shared/Navbar";
 import FilterCard from "./FilterCard";
 import Job from "./Job";
 import { useSelector } from "react-redux";
 
 const Jobs = () => {
-  const allJobs = useSelector((state) => state.job.alljobs) || [];
+const allJobs = useSelector((store) => store.job?.allJobs) || [];
   const [filteredJobs, setFilteredJobs] = useState([]);
 
-  // Initialize filtered jobs when allJobs changes
   useEffect(() => {
-    setFilteredJobs(allJobs);
+    if (allJobs !== filteredJobs) {
+      setFilteredJobs(allJobs);
+    }
   }, [allJobs]);
 
   // Handle filter changes from FilterCard
-  const handleFilterChange = (filters) => {
-    const result = allJobs.filter((job) => {
-      return (
-        (!filters.Location || job.location === filters.Location) &&
-        (!filters.Industry || job.company.name === filters.Industry) &&
-        (!filters.Salary || job.salary === filters.Salary)
-      );
-    });
-    setFilteredJobs(result);
-  };
+  const handleFilterChange = useCallback(
+    (filters) => {
+      const result = allJobs.filter((job) => {
+        return (
+          (!filters.Location || job.location === filters.Location) &&
+          (!filters.Industry || job.company.name === filters.Industry) &&
+          (!filters.Salary || job.salary === filters.Salary)
+        );
+      });
+      setFilteredJobs(result);
+    },
+    [allJobs]
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
