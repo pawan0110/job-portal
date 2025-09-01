@@ -3,9 +3,9 @@ import LatestJobCards from "./LatestJobCards";
 import { useSelector } from "react-redux";
 
 const LatestJobs = () => {
-  const alljobs = useSelector((store) => store.job?.allJobs) || [];
+  const AllOtherJobs = useSelector((store) => store.job.AllOtherJobs) || [];
   // Sort jobs by createdAt descending (latest first)
-  const latestJobs = [...alljobs].sort(
+  const latestJobs = [...AllOtherJobs].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 

@@ -5,13 +5,11 @@ import Job from "./Job";
 import { useSelector } from "react-redux";
 
 const Jobs = () => {
-const allJobs = useSelector((store) => store.job?.allJobs) || [];
-  const [filteredJobs, setFilteredJobs] = useState([]);
+  const allJobs = useSelector((store) => store.job.AllOtherJobs) || [];
+  const [filteredJobs, setFilteredJobs] = useState(allJobs);
 
   useEffect(() => {
-    if (allJobs !== filteredJobs) {
-      setFilteredJobs(allJobs);
-    }
+    setFilteredJobs(allJobs);
   }, [allJobs]);
 
   // Handle filter changes from FilterCard
@@ -46,7 +44,7 @@ const allJobs = useSelector((store) => store.job?.allJobs) || [];
                 Job not found
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {filteredJobs.map(
                   (job) =>
                     job && (
