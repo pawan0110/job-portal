@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Navbar from "./shared/Navbar";
 import HeroSection from "./HeroSection";
-import CategoryCarousel from "./CategoryCarousel"; // ✅ Capitalized
+import CategoryCarousel from "./categoryCarousel"; // ✅ Capitalized
 import LatestJobs from "./LatestJobs";
 import Footer from "./Footer";
 import useGetAllJobs from "@/hooks/useGetAllJobs";
