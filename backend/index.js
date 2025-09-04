@@ -29,15 +29,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, Postman, etc.)
+    // Allow requests with no origin (like Postman)
     if (!origin) return callback(null, true);
 
-    // Allow any origin that matches localhost
-    if (origin.startsWith("http://localhost")) {
+    // Allow localhost (dev) and your Vercel frontend (prod)
+    const allowedOrigins = [
+      "http://localhost:5173", // Vite dev server
+      "https://job-portal0075.vercel.app", // Vercel frontend
+    ];
+
+    if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
-    // Block other origins
     callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
