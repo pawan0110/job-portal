@@ -12,7 +12,7 @@ import CompanySetup from "./components/admin/CompanySetup.jsx";
 import OtherJobs from "./components/admin/OtherJobs.jsx";
 import PostJob from "./components/admin/PostJob.jsx";
 import Applicants from "./components/admin/Applicants.jsx";
-import ProtectedRoute from "./components/admin/ProtectedRaute.jsx";
+import ProtectedRoute from "./components/admin/ProtectedRoute.jsx";
 
 const appRouter = createBrowserRouter([
   {
