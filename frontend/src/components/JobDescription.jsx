@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSingleJob } from "@/redux/jobSlice";
-import { JOB_API_END_POINT, APPLICATION_API_END_POINT } from "../utils/constant";
+import { JOB_API_END_POINT, APPLICATION_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 
 const JobDescription = () => {
