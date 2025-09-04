@@ -4,7 +4,7 @@ import Signup from "./components/auth/Signup.jsx";
 import Home from "./components/Home";
 import Jobs from "./components/Jobs.jsx";
 import Browse from "./components/Browse.jsx";
-import Profile from "./components/ui/profile.jsx";
+import Profile from "./components/ui/Profile.jsx";
 import JobDescription from "./components/JobDescription.jsx";
 import Companies from "./components/admin/companies.jsx"; // ✅ Capitalized
 import CompanyCreate from "./components/admin/CompanyCreate.jsx";
