@@ -50,7 +50,13 @@ const corsOptions = {
 };
 
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: [
+    "http://localhost:5173", // dev frontend
+    "https://job-portal0075.vercel.app" // deployed frontend
+  ],
+  credentials: true // allows sending cookies
+}));
 
 const PORT = process.env.PORT || 3000;
 
