@@ -2,70 +2,54 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import userRoute from "./routes/user.route.js";
 import connectDB from "./utils/db.js";
+
+// Routes
+import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
 
-dotenv.config({});
+dotenv.config();
 
 const app = express();
 
-app.get("/home", (req, res) => {
-  return res.status(200).json({
-    message: "i am coming from backend",
-    success: true,
-  });
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello from root!");
-});
-
-// middleware
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
 
-    // Allow localhost (dev) and your Vercel frontend (prod)
-   const allowedOrigins = [
-  "http://localhost:5173",
-  "https://job-portal0075.vercel.app",
-  "https://job-portal-8luf.onrender.com" // add backend if needed
+// CORS setup
+const allowedOrigins = [
+  "http://localhost:5173",             // Local frontend
+  "https://job-portal0075.vercel.app"  // Deployed frontend
 ];
 
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // Allow Postman or curl requests
+    if (allowedOrigins.includes(origin)) return callback(null, true);
     callback(new Error("Not allowed by CORS"));
   },
-  credentials: true,
-};
-
-
-app.use(cors({
-  origin: [
-    "http://localhost:5173", // dev frontend
-    "https://job-portal0075.vercel.app" // deployed frontend
-  ],
-  credentials: true // allows sending cookies
+  credentials: true // Required to send cookies cross-origin
 }));
 
-const PORT = process.env.PORT || 3000;
+// Test endpoints
+app.get("/", (req, res) => res.send("Hello from root!"));
+app.get("/home", (req, res) => res.status(200).json({
+  message: "I am coming from backend",
+  success: true
+}));
 
+// API Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`server running at port ${PORT}`);
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, async () => {
+  await connectDB();
+  console.log(`Server running on port ${PORT}`);
 });
