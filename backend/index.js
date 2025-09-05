@@ -21,9 +21,10 @@ app.use(cookieParser());
 
 // CORS setup
 const allowedOrigins = [
-  "http://localhost:5173",             // Local frontend
-  "https://job-portal0075.vercel.app"  // Deployed frontend
+  "http://localhost:5173",
+  "https://job-portal-beta-plum.vercel.app" 
 ];
+
 
 app.use(cors({
   origin: function(origin, callback) {
