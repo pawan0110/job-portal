@@ -7,9 +7,9 @@ import { postJob, getAllJobs, getJobById, getAdminJobs } from "../controllers/jo
 const router = express.Router();
 
 // ✅ Use appropriate HTTP methods
-router.route("/post").post(postJob);//
+router.route("/post").post(isAuthenticated,postJob);//
 router.route("/get").get(getAllJobs);
-router.route("/getadminjobs").get( getAdminJobs);//
-router.route("/get/:id").get(getJobById);//
+router.route("/getadminjobs").get(isAuthenticated, getAdminJobs);//
+router.route("/get/:id").get(isAuthenticated,getJobById);//
 
 export default router;

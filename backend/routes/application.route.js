@@ -12,8 +12,8 @@ import {
 const router = express.Router();
 
 // ✅ Use appropriate HTTP methods
-router.route("/apply/:id").get( applyJob);//
-router.route("/get").get( getAppliedJobs);//
+router.route("/apply/:id").get(isAuthenticated, applyJob);//
+router.route("/get").get( isAuthenticated,getAppliedJobs);//
 router.route("/:id/applicants").get( getApplicants);//
 router.route("/status/:id/update").post(updateStatus);//
 
