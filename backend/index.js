@@ -33,10 +33,12 @@ const corsOptions = {
     if (!origin) return callback(null, true);
 
     // Allow localhost (dev) and your Vercel frontend (prod)
-    const allowedOrigins = [
-      "http://localhost:5173", // Vite dev server
-      "https://job-portal0075.vercel.app", // Vercel frontend
-    ];
+   const allowedOrigins = [
+  "http://localhost:5173",
+  "https://job-portal0075.vercel.app",
+  "https://job-portal-8luf.onrender.com" // add backend if needed
+];
+
 
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
