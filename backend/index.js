@@ -23,7 +23,6 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://job-portal-beta-plum.vercel.app",
-  "https://www.job-portal-beta-plum.vercel.app"
 ];
 
 
