@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
+import mongoose from "mongoose"; 
 
 // Routes
 import userRoute from "./routes/user.route.js";
@@ -25,22 +26,34 @@ const allowedOrigins = [
   "https://job-portal-beta-plum.vercel.app",
 ];
 
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // Allow Postman or curl requests
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true, // Required to send cookies cross-origin
+  })
+);
 
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // Allow Postman or curl requests
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true // Required to send cookies cross-origin
-}));
+
+app.get("/test-db", (req, res) => {
+  const states = ["disconnected", "connected", "connecting", "disconnecting"];
+  res.json({ connection: states[mongoose.connection.readyState] });
+});
+
 
 // Test endpoints
 app.get("/", (req, res) => res.send("Hello from root!"));
-app.get("/home", (req, res) => res.status(200).json({
-  message: "I am coming from backend",
-  success: true
-}));
+app.get("/home", (req, res) =>
+  res.status(200).json({
+    message: "I am coming from backend",
+    success: true,
+  })
+);
+
+
 
 // API Routes
 app.use("/api/v1/user", userRoute);
@@ -54,8 +67,3 @@ app.listen(PORT, async () => {
   await connectDB();
   console.log(`Server running on port ${PORT}`);
 });
-
-
-
-
-
