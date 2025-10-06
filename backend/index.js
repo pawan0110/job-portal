@@ -21,21 +21,50 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // CORS setup
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://job-portal-beta-plum.vercel.app",
+// ];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true); // Allow Postman or curl requests
+//       if (allowedOrigins.includes(origin)) return callback(null, true);
+//       callback(new Error("Not allowed by CORS"));
+//     },
+//     credentials: true, // Required to send cookies cross-origin
+//   })
+// );
+
+
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://job-portal-beta-plum.vercel.app",
+  "http://localhost:5173",                          // local dev
+  "https://job-portal-beta-plum.vercel.app",       // old Vercel frontend
+  "https://job-portal-w719.vercel.app"    // new Vercel frontend
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // Allow Postman or curl requests
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true, // Required to send cookies cross-origin
-  })
-);
+// CORS middleware
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) {
+      // Allow requests like Postman, curl, or mobile apps (no origin)
+      return callback(null, true);
+    }
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    // Block all other origins
+    return callback(new Error(`CORS policy: ${origin} not allowed`));
+  },
+  credentials: true, // allow cookies and authorization headers
+}));
+
+// Optional: handle preflight requests
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 
 app.get("/test-db", (req, res) => {
