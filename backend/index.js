@@ -22,7 +22,8 @@ app.use(cookieParser());
 // CORS setup
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://job-portal-beta-plum.vercel.app" 
+  "https://job-portal-beta-plum.vercel.app",
+  "https://www.job-portal-beta-plum.vercel.app"
 ];
 
 
@@ -50,8 +51,12 @@ app.use("/api/v1/application", applicationRoute);
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', async () => {
+app.listen(PORT, async () => {
   await connectDB();
   console.log(`Server running on port ${PORT}`);
 });
+
+
+
+
 
