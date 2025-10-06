@@ -1,3 +1,18 @@
+// import express from "express";
+// import { login, logout, register, updateProfile } from "../controllers/user.controller.js";
+// import isAuthenticated from "../middlewares/isAuthenticated.js";
+// import { singleUpload } from "../middlewares/multer.js";
+
+// const router = express.Router();
+
+// router.route("/register").post(singleUpload, register);
+// router.route("/login").post(isAuthenticated,login);
+// router.route("/updateProfile").post(isAuthenticated,singleUpload,updateProfile);
+// router.route("/logout").get(logout);
+
+
+// export default router;
+
 import express from "express";
 import { login, logout, register, updateProfile } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
@@ -6,10 +21,8 @@ import { singleUpload } from "../middlewares/multer.js";
 const router = express.Router();
 
 router.route("/register").post(singleUpload, register);
-router.route("/login").post(isAuthenticated,login);
-router.route("/updateProfile").post(isAuthenticated,singleUpload,updateProfile);
+router.route("/login").post(login); // removed isAuthenticated
+router.route("/updateProfile").post(isAuthenticated, singleUpload, updateProfile);
 router.route("/logout").get(logout);
 
-
 export default router;
-
